@@ -64,6 +64,8 @@ Utilizamos **Google Cloud Storage** para alojar los activos estáticos del Dashb
 - **Google Cloud Run**: Para el despliegue de microservicios sin servidor.
 - **Cloud Build**: Para la integración y despliegue continuo.
 - **Firestore**: Base de datos NoSQL de alta disponibilidad.
+- **Html**: Para el diseño web del simulador y del dashboard.
+- **JavaScript**: Para los endpoints y la conexion de los servicios al frontend.
 - **Cloud Storage**: Hosting de archivos estáticos a escala global.
 
 ---
