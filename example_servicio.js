@@ -6,8 +6,8 @@ const firestore = new Firestore({ projectId: "proyecto-490818" });
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "diazhoilluisdavid@gmail.com",
-    pass: "ibst zmuq pchi ozor",
+    user: "example@gmail.com",
+    pass: "ibst zmuq pchi example",
   },
 });
 
@@ -63,8 +63,8 @@ exports.registrarTemperatura = async (req, res) => {
     // ENVIAR CORREO SOLO SI ES CRÍTICO
     if (estado === "Crítico") {
       const mailOptions = {
-        from: '"Sistema DEV-ID Sonora" <diazhoilluisdavid@gmail.com>',
-        to: "1120209@unav.edu.mx",
+        from: '"Sistema DEV-ID Sonora" <example@gmail.com>',
+        to: "example@unav.edu.mx",
         subject: `🚨 ALERTA CRÍTICA: ${temp}°C detectados`,
         html: `
           <div style="font-family: sans-serif; border: 2px solid #d32f2f; padding: 20px; border-radius: 10px;">
