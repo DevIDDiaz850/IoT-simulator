@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inteligencia Energética DEV-ID</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --primary: #3b82f6;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --text: #f8fafc;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 20px;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        color: var(--primary);
+      }
+      .brand span {
+        font-size: 0.8rem;
+        opacity: 0.6;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .kpi-card {
+        background: var(--card);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid #334155;
+      }
+
+      .kpi-card h3 {
+        margin: 0;
+        font-size: 0.8rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+      }
+      .kpi-card .value {
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin: 10px 0;
+        display: block;
+      }
+      .kpi-card .status {
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .insight-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .insight-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 25px;
+        display: flex;
+        gap: 20px;
+        border-left: 6px solid var(--primary);
+      }
+
+      .icon-box {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .peak {
+        border-color: var(--primary);
+      }
+      .maint {
+        border-color: var(--warning);
+      }
+      .error {
+        border-color: var(--danger);
+      }
+
+      .insight-content h4 {
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+      }
+      .insight-content p {
+        margin: 0;
+        opacity: 0.8;
+        line-height: 1.5;
+        font-size: 0.9rem;
+      }
+
+      .accent-blue {
+        color: var(--primary);
+      }
+      .accent-red {
+        color: var(--danger);
+        font-weight: bold;
+      }
+      .accent-green {
+        color: var(--success);
+        font-weight: bold;
+      }
+
+      #reloj {
+        font-family: monospace;
+        font-size: 1.2rem;
+        background: #334155;
+        padding: 5px 15px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="brand">
+          <h1>
+            <span
+              style="
+                font-size: 0.7rem;
+                vertical-align: middle;
+                background: var(--primary);
+                color: white;
+                padding: 2px 6px;
+                border-radius: 4px;
+              "
+              >DEV-ID</span
+            >
+          </h1>
+          <span>Sistemas de Inteligencia Energética</span>
+        </div>
+        <div id="reloj">00:00:00</div>
+      </header>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <h3>Temperatura Actual</h3>
+          <span class="value" id="temp-val">-- °C</span>
+          <div class="status" id="temp-status">
+            <i data-lucide="refresh-cw" size="14"></i> Sincronizando...
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Peak Shaving (1:00 PM)</h3>
+          <span class="value" id="countdown">--:--:--</span>
+          <div class="status accent-blue">
+            <i data-lucide="zap" size="14"></i> Ahorro Programado
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Estado del Activo</h3>
+          <span class="value" id="asset-status" style="font-size: 1.4rem"
+            >--</span
+          >
+          <div class="status">
+            <i data-lucide="database" size="14"></i> sensor_frigorifico
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-section">
+        <div class="insight-card peak">
+          <div class="icon-box">
+            <i data-lucide="trending-down" class="accent-blue"></i>
+          </div>
+          <div class="insight-content">
+            <h4>A. Desplazamiento de Carga (Peak Shaving)</h4>
+            <p>
+              Estrategia CFE Sonora: Pre-enfriamiento automático a las
+              <strong>1:00 PM</strong> para evitar el arranque del compresor
+              durante el horario pico (2:00 PM - 6:00 PM).
+            </p>
+          </div>
+        </div>
+
+        <div class="insight-card maint">
+          <div class="icon-box">
+            <i data-lucide="wrench" style="color: var(--warning)"></i>
+          </div>
+          <div class="insight-content">
+            <h4>B. Mantenimiento Predictivo</h4>
+            <p>
+              Comparativa mensual: El tiempo de ignición aumentó un
+              <strong>20%</strong>.
+              <span style="color: var(--warning)"
+                >Su equipo necesita limpieza;</span
+              >
+              está gastando <strong>$200 MXN extra</strong> al mes por
+              ineficiencia.
+            </p>
+          </div>
+        </div>
+
+        <div class="insight-card error" id="error-card">
+          <div class="icon-box">
+            <i data-lucide="alert-triangle" style="color: var(--danger)"></i>
+          </div>
+          <div class="insight-content">
+            <h4>C. Detección de Errores Operativos</h4>
+            <p id="error-text">
+              Analizando patrones de recuperación térmica...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Función segura para renderizar iconos
+      function renderIcons() {
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+      }
+
+      // 1. Reloj y Contador Peak Shaving
+      function updateTimers() {
+        const ahora = new Date();
+        const relojEl = document.getElementById("reloj");
+        if (relojEl) relojEl.innerText = ahora.toLocaleTimeString();
+
+        let objetivo = new Date();
+        objetivo.setHours(13, 0, 0, 0); // 1:00 PM
+
+        if (ahora > objetivo) objetivo.setDate(objetivo.getDate() + 1);
+
+        let dif = objetivo - ahora;
+        let h = Math.floor(dif / 3600000)
+          .toString()
+          .padStart(2, "0");
+        let m = Math.floor((dif % 3600000) / 60000)
+          .toString()
+          .padStart(2, "0");
+        let s = Math.floor((dif % 60000) / 1000)
+          .toString()
+          .padStart(2, "0");
+
+        const countdownEl = document.getElementById("countdown");
+        if (countdownEl) countdownEl.innerText = `${h}:${m}:${s}`;
+      }
+
+      // 2. Consulta Real a Cloud Run
+      async function fetchCloudRunData() {
+        const url = "https://get-388094449667.europe-west1.run.app";
+        const tempElement = document.getElementById("temp-val");
+        const statusElement = document.getElementById("asset-status");
+        const errorText = document.getElementById("error-text");
+        const tempStatus = document.getElementById("temp-status");
+
+        try {
+          const response = await fetch(url);
+          const result = await response.json();
+
+          if (result.success && result.data) {
+            const data = result.data;
+            const t = parseFloat(data.temperatura);
+
+            // Actualizar UI
+            if (tempElement) tempElement.innerText = t.toFixed(1) + " °C";
+            if (tempStatus)
+              tempStatus.innerHTML = `<i data-lucide="check" size="14"></i> Actualizado`;
+
+            // Lógica de Alertas Operativas (C)
+            if (t > 4.5) {
+              if (statusElement) {
+                statusElement.innerText = "RECUPERACIÓN LENTA";
+                statusElement.style.color = "var(--danger)";
+              }
+              if (errorText)
+                errorText.innerHTML = `<span class="accent-red">ALERTA CRÍTICA:</span> Patrón detectado. Posible puerta mal cerrada o ingreso de producto caliente.`;
+            } else {
+              if (statusElement) {
+                statusElement.innerText = "SISTEMA ÓPTIMO";
+                statusElement.style.color = "var(--success)";
+              }
+              if (errorText)
+                errorText.innerHTML = `<span class="accent-green">OPERACIÓN SEGURA:</span> El sellado y recuperación térmica operan dentro del rango nominal.`;
+            }
+          }
+        } catch (error) {
+          console.error("Error consultando:", error);
+          if (tempStatus)
+            tempStatus.innerHTML = `<i data-lucide="wifi-off" size="14"></i> Error de Red`;
+        }
+        renderIcons();
+      }
+
+      // Inicialización una vez cargado el DOM y scripts
+      window.onload = () => {
+        renderIcons();
+        updateTimers();
+        fetchCloudRunData();
+
+        setInterval(updateTimers, 1000);
+        setInterval(fetchCloudRunData, 10000); // Cada 10 segundos
+      };
+    </script>
+  </body>
+</html>

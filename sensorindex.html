@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simulador IoT - DEV-ID</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #eceff1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        width: 380px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 5px;
+      }
+      .brand {
+        color: #1a73e8;
+        font-weight: bold;
+        font-size: 0.8rem;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 15px 0;
+        border: 2px solid #cfd8dc;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: #1557b0;
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      #status {
+        margin-top: 20px;
+        font-size: 0.9rem;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+        text-align: left;
+        line-height: 1.4;
+      }
+      .action-text {
+        display: block;
+        margin-top: 8px;
+        font-style: italic;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <span class="brand">PROYECTO SIED / DEV-ID</span>
+      <h2>📡 Sensor de Temperatura</h2>
+      <p style="color: #666; font-size: 0.9rem">
+        Simulación de envío a Cloud Run & Email
+      </p>
+
+      <input
+        type="number"
+        id="tempValue"
+        placeholder="Grados Celsius (°C)"
+        step="0.1"
+      />
+      <button id="btnEnviar" onclick="enviarAFuncion()">Enviar Lectura</button>
+
+      <div id="status"></div>
+    </div>
+
+    <script>
+      async function enviarAFuncion() {
+        const tempInput = document.getElementById("tempValue");
+        const statusDiv = document.getElementById("status");
+        const btn = document.getElementById("btnEnviar");
+
+        // URL de tu servicio en Cloud Run
+        const url =
+          "https://registrartemperatura-388094449667.europe-west1.run.app";
+
+        if (!tempInput.value) return alert("Ingresa un valor de temperatura");
+
+        // UI State: Procesando
+        btn.disabled = true;
+        statusDiv.style.display = "block";
+        statusDiv.style.background = "#eeeeee";
+        statusDiv.style.color = "#333";
+        statusDiv.innerHTML =
+          "⏳ <strong>Procesando en la nube...</strong><br>Guardando en Firestore y enviando email.";
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ temperatura: parseFloat(tempInput.value) }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            // Personalización visual según el estado que regresó la Cloud Function
+            const esCritico = result.estado === "Crítico";
+            statusDiv.style.background = esCritico ? "#ffebee" : "#e8f5e9";
+            statusDiv.style.color = esCritico ? "#c62828" : "#2e7d32";
+            statusDiv.style.border = `1px solid ${esCritico ? "#ef9a9a" : "#a5d6a7"}`;
+
+            // Insertamos la respuesta de la función (incluyendo la acción tomada)
+            statusDiv.innerHTML = `
+              <strong>✅ ${result.message}</strong><br>
+              <span>Estado: <strong>${result.estado}</strong></span><br>
+              <span class="action-text">Acción: ${esCritico ? "🚨" : "🛡️"} ${getAccionSimulada(parseFloat(tempInput.value))}</span>
+            `;
+
+            tempInput.value = ""; // Limpiamos el sensor
+          } else {
+            statusDiv.style.background = "#fff3e0";
+            statusDiv.innerText =
+              "❌ Error en el servidor: " + response.statusText;
+          }
+        } catch (err) {
+          statusDiv.style.background = "#fff3e0";
+          statusDiv.style.color = "#e65100";
+          statusDiv.innerText =
+            "❌ Error de conexión o CORS. Revisa si la función está activa.";
+          console.error(err);
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      // Función auxiliar para mostrar la misma lógica de acción en el HTML
+      function getAccionSimulada(t) {
+        return t > 4.5
+          ? "ALERTA INMEDIATA: Favor de verificar el cierre de puertas y el estado del compresor."
+          : "Monitoreo de rutina: Sin acciones requeridas.";
+      }
+    </script>
+  </body>
+</html>
