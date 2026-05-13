@@ -68,6 +68,12 @@ Utilizamos **Google Cloud Storage** para alojar los activos estáticos del Dashb
 - **JavaScript**: Para los endpoints y la conexion de los servicios al frontend.
 - **Cloud Storage**: Hosting de archivos estáticos a escala global.
 
+## 🔗 Enlaces de Demostración
+
+Puedes interactuar con el sistema a través de los siguientes módulos alojados en Google Cloud Storage:
+
+*   **[Simulador de Sensor IoT](https://storage.googleapis.com/example01-bucket-01/sensorindex.html)**: Interfaz para emular el envío de datos de temperatura y humedad.
+*   **[Dashboard de Monitoreo](https://storage.googleapis.com/example01-bucket-01/dashboard.html)**: Panel visual para que el usuario final consulte los datos en tiempo real.
 ---
 
 **Nota de Implementación**: Al configurar el trigger en **Cloud Build**, asegúrate de definir correctamente el **Punto de entrada** y el **Objetivo de la función** para evitar errores de compilación durante el despliegue automático.
