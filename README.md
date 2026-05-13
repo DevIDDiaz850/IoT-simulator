@@ -55,7 +55,7 @@ Utilizamos **Google Cloud Storage** para alojar los activos estáticos del Dashb
 
 - **Acceso**: El bucket se configura con acceso de lectura pública (`allUsers` con el rol `Storage Object Viewer`).
 - **Contenido**: Aquí se cargan los archivos `index.html`, `css` y `js` que consultan nuestras funciones.
-  ![alt text](img/image4.png)
+  ![alt text](img/image3.png)
 
 ---
 
